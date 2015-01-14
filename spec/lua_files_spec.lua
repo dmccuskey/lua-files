@@ -34,6 +34,23 @@ local File = require 'lua_files'
 
 describe( "Module Test: lua_files.lua", function()
 
+
+	describe( "Tests for fileExists", function()
+
+		it( "File.fileExists", function()
+			local res
+
+			res = File.fileExists( 'spec/lua_files_spec.lua' )
+			assert.is_true( res )
+
+			res = File.fileExists( 'spec/_NO_FILE_HERE_.txt' )
+			assert.is_false( res )
+
+		end)
+
+	end)
+
+
 	describe( "Tests for read/write JSON File", function()
 
 		it( "File.convertJsonToLua", function()
@@ -54,6 +71,7 @@ describe( "Module Test: lua_files.lua", function()
 		end)
 
 	end)
+
 
 	describe( "Tests for readingConfigFile", function()
 
@@ -88,6 +106,7 @@ describe( "Module Test: lua_files.lua", function()
 
 		end)
 
+
 		it( "File.processSectionLine", function()
 			assert.is.equal( File.processSectionLine( "[KEY_LINE]" ), 'key_line' )
 
@@ -95,6 +114,7 @@ describe( "Module Test: lua_files.lua", function()
 			assert.has.errors( function() File.processSectionLine( "[KEY_LINE" ) end )
 			assert.has.errors( function() File.processSectionLine( "KEY_LINE]" ) end )
 		end)
+
 
 		it( "File.processKeyLine", function()
 			local key_name, key_value
@@ -177,5 +197,6 @@ describe( "Module Test: lua_files.lua", function()
 
 
 	end) -- reading config file
+
 
 end)
