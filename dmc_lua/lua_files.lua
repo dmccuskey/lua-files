@@ -39,7 +39,7 @@ SOFTWARE.
 
 -- Semantic Versioning Specification: http://semver.org/
 
-local VERSION = "0.1.1"
+local VERSION = "0.1.2"
 
 
 
@@ -69,7 +69,8 @@ end
 
 
 local File = {}
-File.NAME = "Lua Files Instance"
+File.__version = VERSION
+File.NAME = "Lua Files"
 
 --== Class constants ==--
 
