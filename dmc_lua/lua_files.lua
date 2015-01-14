@@ -1,14 +1,14 @@
 --====================================================================--
--- lua_files.lua
+-- dmc_lua/lua_files.lua
 --
--- Documentation: http://docs.davidmccuskey.com/display/docs/lua_files.lua
+-- Documentation: http://docs.davidmccuskey.com/
 --====================================================================--
 
 --[[
 
 The MIT License (MIT)
 
-Copyright (C) 2014 David McCuskey. All Rights Reserved.
+Copyright (C) 2014-2015 David McCuskey. All Rights Reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@ SOFTWARE.
 
 
 --====================================================================--
--- DMC Lua Library : Lua Files
+--== DMC Lua Library : Lua Files
 --====================================================================--
 
 
@@ -66,7 +66,7 @@ local ClassBase = Objects.ClassBase
 
 
 --====================================================================--
--- Lua File Module
+--== Lua File Module
 --====================================================================--
 
 
@@ -78,8 +78,8 @@ File.NAME = "Lua Files Instance"
 File.DEFAULT_CONFIG_SECTION = 'default'
 
 
---====================================================================--
---== fileExists() ==--
+--======================================================--
+-- fileExists()
 
 function File.fileExists( file_path )
 	-- print( "File.fileExists", file_path )
@@ -100,8 +100,8 @@ function File.fileExists( file_path )
 end
 
 
---====================================================================--
---== remove() ==--
+--======================================================--
+-- remove()
 
 -- item is a path
 function File._removeFile( f_path, f_options )
@@ -185,8 +185,8 @@ function File.remove( items, options )
 end
 
 
---====================================================================--
---== readFile() ==--
+--======================================================--
+-- readFile()
 
 -- full path file
 function File.readFile( file_path, options )
@@ -232,8 +232,8 @@ function File.readFileContents( file_path, options )
 end
 
 
---====================================================================--
---== saveFile() ==--
+--======================================================--
+-- saveFile()
 
 -- full fil epath
 function File.saveFile( file_path, data )
@@ -244,8 +244,8 @@ function File.saveFile( file_path, data )
 end
 
 
---====================================================================--
---== read/write JSONFile() ==--
+--======================================================--
+-- read/write JSONFile()
 
 function File.convertLuaToJson( lua_data )
 	assert( json ~= nil, 'JSON library not loaded' )
@@ -280,8 +280,8 @@ function File.writeJSONFile( file_path, lua_data, options )
 end
 
 
---====================================================================--
---== readConfigFile() ==--
+--======================================================--
+-- readConfigFile()
 
 function File.getLineType( line )
 	-- print( "File.getLineType", #line, line )
