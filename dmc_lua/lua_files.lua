@@ -42,26 +42,24 @@ SOFTWARE.
 local VERSION = "0.1.1"
 
 
+
 --====================================================================--
--- Imports
+--== Imports
 
-local Error = require 'lua_error'
-local Objects = require 'lua_objects'
 
+local Error = require 'lua_error' -- try/catch
 
 local ok, lfs = pcall( require, 'lfs' )
-if not ok then lfs = nil end
+if not ok then
+	print( "WARNING: lua_files missing lfs module" )
+	lfs = nil
+end
 
 local ok, json = pcall( require, 'json' )
-if not ok then json = nil end
-
-
---====================================================================--
--- Setup, Constants
-
--- setup some aliases to make code cleaner
-local inheritsFrom = Objects.inheritsFrom
-local ClassBase = Objects.ClassBase
+if not ok then
+	print( "WARNING: lua_files missing json module" )
+	json = nil
+end
 
 
 
