@@ -187,47 +187,51 @@ end
 --======================================================--
 -- readFile()
 
--- full path file
-function File.readFile( file_path, options )
+function File._openCloseFile( file_path, read_f, options )
 	-- print( "File.readFile", file_path )
 	assert( type(file_path)=='string', "file path is not string" )
-	assert( #file_path>0 )
-	options = options or {}
-	options.lines = options.lines == nil and true or options.lines
+	assert( type(read_f)=='function', "read function is not function" )
 	--==--
 
-	local fh, contents
-
-	fh = assert( io.open(file_path, 'r') )
-
-	if options.lines == false then
-		-- read contents in one big string
-		contents = fh:read( '*all' )
-
-	else
-		-- read all contents of file into a table
-		contents = {}
-		for line in fh:lines() do
-			table.insert( contents, line )
-		end
-
-	end
-
+	local fh = assert( io.open(file_path, 'r') )
+	local contents = read_f( fh )
 	io.close( fh )
 
 	return contents
 end
 
+
+function File._readLines( fh )
+	local contents = {}
+	for line in fh:lines() do
+		table.insert( contents, line )
+	end
+	return contents
+end
+
 function File.readFileLines( file_path, options )
-	options = options or {}
-	options.lines = true
-	return File.readFile( file_path, options )
+	return File._openCloseFile( file_path, File._readLines, options )
+end
+
+
+function File._readContents( fh )
+	return fh:read( '*all' )
 end
 
 function File.readFileContents( file_path, options )
+	return File._openCloseFile( file_path, File._readContents, options )
+end
+
+
+function File.readFile( file_path, options )
 	options = options or {}
-	options.lines = false
-	return File.readFile( file_path, options )
+	options.lines = options.lines == nil and true or options.lines
+	--==--
+	if options.lines == true then
+		return File.readFileLines( file_path, options )
+	else
+		return File.readFileContents( file_path, options )
+	end
 end
 
 
