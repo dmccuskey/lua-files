@@ -16,7 +16,6 @@ module_config = {
 		"requires": [
 			"lua-error",
 			"lua-json-shim",
-			"lua-objects",
 			"lua-utils"
 		]
 	},
