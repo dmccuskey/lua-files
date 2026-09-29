@@ -14,7 +14,6 @@ module_config = {
 			"lua_files.lua"
 		],
 		"requires": [
-			"lua-error",
 			"lua-json-shim",
 			"lua-utils"
 		]

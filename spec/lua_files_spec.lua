@@ -46,6 +46,10 @@ describe( "Module Test: lua_files.lua", function()
 			res = File.fileExists( 'spec/_NO_FILE_HERE_.txt' )
 			assert.is_false( res )
 
+			-- a folder isn't a file
+			res = File.fileExists( 'spec' )
+			assert.is_false( res )
+
 		end)
 
 	end)
@@ -200,6 +204,7 @@ describe( "Module Test: lua_files.lua", function()
 
 		it( "File.processSectionLine", function()
 			assert.is.equal( File.processSectionLine( "[KEY_LINE]" ), 'key_line' )
+			assert.is.equal( File.processSectionLine( "[DMC_E4X]" ), 'dmc_e4x' )
 
 			assert.has.errors( function() File.processSectionLine( "[frank]" ) end )
 			assert.has.errors( function() File.processSectionLine( "[KEY_LINE" ) end )
@@ -228,9 +233,22 @@ describe( "Module Test: lua_files.lua", function()
 			key_name, key_value = File.processKeyLine( 'THEPATH:PATH  =  /one/two/three  ' )
 			assert.is.equal( key_value, '.one.two.three' )
 
-			-- incorrect type, default to string
+			-- spaces around the colon
 			key_name, key_value = File.processKeyLine( 'THE: PATH  =  "/one/two/three"  ' )
-			assert.is.equal( key_value, '/one/two/three' )
+			assert.is.equal( key_name, 'the' )
+			assert.is.equal( key_value, '.one.two.three' )
+
+			-- unknown type
+			assert.has.error( function() File.processKeyLine( 'THE:PATHS = /one/two' ) end,
+				"unknown type 'paths' in line: THE:PATHS = /one/two" )
+
+			-- digits in names
+			key_name, key_value = File.processKeyLine( 'PORT2:INT = 8080' )
+			assert.is.equal( key_name, 'port2' )
+			assert.is.equal( key_value, 8080 )
+
+			-- not a key line
+			assert.has.errors( function() File.processKeyLine( 'NOTE read this' ) end )
 
 			-- mismatched quotes
 			assert.has.errors( function() File.processKeyLine( 'THE:PATH="/one/two\'' ) end )
@@ -258,8 +276,13 @@ describe( "Module Test: lua_files.lua", function()
 			assert.is.equal( File.castTo_boolean( 'false' ), false )
 			assert.is.equal( File.castTo_bool( 'false' ), false )
 
-			assert.is.equal( File.castTo_boolean( 'fdsfd' ), false )
-			assert.is.equal( File.castTo_bool( 'fdsfd' ), false )
+			assert.is.equal( File.castTo_boolean( 'TRUE' ), true )
+			assert.is.equal( File.castTo_bool( 'False' ), false )
+
+			assert.has.error( function() File.castTo_boolean( 'fdsfd' ) end,
+				"expected true or false, got 'fdsfd'" )
+			assert.has.errors( function() File.castTo_bool( 'yes' ) end )
+			assert.has.errors( function() File.castTo_bool( '1' ) end )
 		end)
 		it( "File.castTo_integer tests", function()
 			assert.is.equal( File.castTo_integer( '120' ), 120 )
@@ -273,6 +296,10 @@ describe( "Module Test: lua_files.lua", function()
 
 			assert.has.errors( function() File.castTo_integer( 'frank' ) end )
 			assert.has.errors( function() File.castTo_int( 'frank' ) end )
+
+			assert.is.equal( File.castTo_int( '-7' ), -7 )
+			assert.has.error( function() File.castTo_int( '1.5' ) end,
+				"expected a whole number, got '1.5'" )
 		end)
 		it( "File.castTo_json tests", function()
 			local j = File.castTo_json( '{ "hello":"123"}' )
@@ -285,6 +312,7 @@ describe( "Module Test: lua_files.lua", function()
 		end)
 		it( "File.castTo_path tests", function()
 			assert.is.equal( File.castTo_path( 'lib/one/two/three' ), 'lib.one.two.three' )
+			assert.is.equal( select( '#', File.castTo_path( 'a/b' ) ), 1 )
 
 			assert.has.errors( function() File.castTo_path( nil ) end )
 			assert.has.errors( function() File.castTo_path( {} ) end )
